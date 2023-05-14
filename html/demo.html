@@ -1,0 +1,5 @@
+<?php
+$images = glob('フォルダ名/*jpg');
+foreach($images as $v) {
+  echo '<img src="' , $v , '" alt="" loading="lazy">';
+}?>
