@@ -34,6 +34,8 @@ class TestOptions:
         # arguments for ADFD
         self.parser.add_argument('--n_outputs_to_generate', type=int, default=5,
                                  help='Number of outputs to generate per input image.')
+        self.parser.add_argument('--max_steps_adfd', default=10000, type=int,
+                                 help='Number of iteration')
         self.parser.add_argument('--div_opt', default='adam', type=str,
                                  help='Optimizer')
         self.parser.add_argument('--div_lr', default=0.01, type=float,
@@ -42,25 +44,22 @@ class TestOptions:
                                  help='Parameter for EarlyStopping. Defualt value is 7.')
         self.parser.add_argument('--es_delta', default=0.0001, type=float,
                                  help='Parameter for EarlyStopping. Defualt value is 0.0001.')
-        self.parser.add_argument('--lpips_lambda', default=0, type=float,
+        self.parser.add_argument('--lpips_lambda', default=0.01, type=float,
                                  help='LPIPS loss multiplier factor')
-        self.parser.add_argument('--id_lambda', default=0, type=float,
+        self.parser.add_argument('--id_lambda', default=0.1, type=float,
                                  help='ID loss multiplier factor')
-        self.parser.add_argument('--l2_lambda', default=0, type=float,
+        self.parser.add_argument('--l2_lambda', default=0.01, type=float,
                                  help='L2 loss multiplier factor')
-        self.parser.add_argument('--aging_lambda', default=0, type=float,
+        self.parser.add_argument('--aging_lambda', default=5, type=float,
                                  help='Aging loss multiplier factor')
-
         self.parser.add_argument('--lpips_lambda_crop', default=0, type=float,
                                  help='LPIPS loss multiplier factor for inner image region')
         self.parser.add_argument('--l2_lambda_crop', default=0, type=float,
                                  help='L2 loss multiplier factor for inner image region')
-
         self.parser.add_argument('--lpips_lambda_aging', default=0, type=float,
                                  help='LPIPS loss multiplier factor for aging')
         self.parser.add_argument('--l2_lambda_aging', default=0, type=float,
                                  help='L2 loss multiplier factor for aging')
-
         self.parser.add_argument('--use_weighted_id_loss', action="store_true",
                                  help="Whether to weight id loss based on change in age (more change -> less weight)")
 
@@ -69,8 +68,8 @@ class TestOptions:
                                  help='Number of sample latents to extrapolate with. Default value is 4.')
         self.parser.add_argument('--age_interval', default=3, type=int,
                                  help='Interval of sample latents. Default value is 3.')
-        self.parser.add_argument('--max_steps', default=100, type=int,
-                                 help='Number of iteration')
+        self.parser.add_argument('--max_steps_go', default=100, type=int,
+                                 help='Number of iteration for guided optimization')
         self.parser.add_argument('--tol_beta', default=0.5, type=float,
                                  help='Tolerance parameter. Default value is 0.5.')
 

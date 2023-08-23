@@ -1,4 +1,4 @@
-import os
+import os, sys
 import time
 import numpy as np
 from argparse import Namespace
@@ -10,8 +10,6 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
-
-import sys
 
 sys.path.append(".")
 sys.path.append("..")
@@ -37,7 +35,7 @@ class ADFD:
 		ckpt = torch.load(self.test_opts.checkpoint_path, map_location='cpu')
 		opts = ckpt['opts']
 		opts.update(vars(self.test_opts))
-		self.opts = Namespace(**self.opts)
+		self.opts = Namespace(**opts)
 
 		self.net = pSp(self.opts)
 		self.net.eval()
@@ -110,7 +108,7 @@ class ADFD:
 						if self.opts.div_opt == 'adam':
 							optimizer = Adam([s for i, s in enumerate(s_mod) if i % 3 != 1], self.opts.div_lr)
 						earlystopping = EarlyStopping(patience=self.opts.patience, delta=self.opts.es_delta)
-						for step in tqdm(range(self.opts.max_steps)):
+						for step in tqdm(range(self.opts.max_steps_adfd)):
 							optimizer.zero_grad()
 							if step == 0:
 								initial_result = result.detach().clone()
@@ -119,10 +117,10 @@ class ADFD:
 							else:
 								input_ages = self.aging_loss.extract_ages(y_hat) / 100.
 
-							y_hat = self.net.decoder([s_mod],
-													 input_is_latent=False,
-													 input_is_stylespace=True,
-													 randomize_noise=False,)
+							y_hat, _ = self.net.decoder([s_mod],
+														input_is_latent=False,
+														input_is_stylespace=True,
+														randomize_noise=False,)
 							y_hat_rs = self.face_pool(y_hat)
 							loss, _, _ = self.calc_loss(input_image,
 				   										initial_result,
@@ -177,7 +175,7 @@ class ADFD:
 			if self.opts.use_weighted_id_loss:  # compute weighted id loss only on forward pass
 				age_diffs = torch.abs(target_ages - input_ages)
 				weights = train_utils.compute_cosine_weights(x=age_diffs)
-			loss_id, sim_improvement, id_logs = self.id_loss(y_hat, y, x, weights=weights, return_loss=True)
+			loss_id, sim_improvement, id_logs = self.id_loss(y_hat, y, x, weights=weights)
 			loss_dict[f'loss_id'] = float(loss_id)
 			loss_dict[f'id_improve'] = float(sim_improvement)
 			loss = loss_id * self.opts.id_lambda

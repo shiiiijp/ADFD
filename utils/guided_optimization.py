@@ -1,5 +1,5 @@
 from argparse import Namespace
-import os
+import os, sys
 import time
 from tqdm import tqdm
 from PIL import Image
@@ -7,8 +7,6 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from scipy import interpolate
-
-import sys
 
 sys.path.append(".")
 sys.path.append("..")
@@ -20,7 +18,7 @@ from utils.common import tensor2im
 from models.psp import pSp
 from criteria.aging_loss import AgingLoss
 
-class guided_optimization:
+class GuidedOptimization:
 	def __init__(self, opts):
 		self.test_opts = opts
 
@@ -36,7 +34,6 @@ class guided_optimization:
 
 		self.ext_method = lambda x, y: interpolate.interp1d(x, y, kind="linear", axis=0, bounds_error=False, fill_value="extrapolate")
 		self.aging_loss = AgingLoss()
-
 
 	def optimize(self):
 		print(f'Loading dataset for {self.opts.dataset_type}')
@@ -75,7 +72,7 @@ class guided_optimization:
 						for age_transformer in age_transformers:
 							input_age_image = age_transformer(input_image.cpu()).to('cuda')
 							input_cuda = input_age_image.unsqueeze(0).cuda().float()
-							_, SAM_k = self.run_on_batch(input_cuda, self.net, self.opts)
+							_, SAM_k = self.run_on_batch(input_cuda)
 
 							SAM_k_tensor = []
 							for SAM_k_l in SAM_k:
@@ -91,12 +88,12 @@ class guided_optimization:
 						prev_plus = None
 						while True:
 							new_latent = torch.from_numpy(f(alpha).astype(np.float32)).clone().cuda()
-							result = self.run_on_batch_latents(new_latent, self.net)[0]
+							result = self.run_on_batch_latents(new_latent)[0]
 							age = self.aging_loss.extract_ages(result)[0]
 
 							if abs(age - int(target_age)) < beta:
 								break
-							elif count == self.opts.max_steps:
+							elif count == self.opts.max_steps_go:
 								break
 							
 							if age < (int(target_age) - beta):
@@ -134,16 +131,15 @@ class guided_optimization:
 			with open(stats_path, 'w') as f:
 				f.write(result_str)
 
-
-	def run_on_batch(inputs, net, opts):
-		result_batch, result_latents = net(inputs, randomize_noise=False, resize=opts.resize_outputs, return_s=True)
+	def run_on_batch(self, inputs):
+		result_batch, result_latents = self.net(inputs, randomize_noise=False, resize=self.opts.resize_outputs, return_s=True)
 		return result_batch, result_latents
 
-	def run_on_batch_latents(codes, net):
+	def run_on_batch_latents(self, codes):
 		sspace = [512,512,512,512,512,512,512,512,512,512,512,512,512,512,512,256,256,256,128,128,128,64,64,64,32,32]
 		codes = list(torch.split(codes, sspace))
 		codes_s = []
 		for code in codes:
 			codes_s.append(torch.unsqueeze(torch.unsqueeze(torch.unsqueeze(torch.unsqueeze(code,-1),-1),0),0))
-		result_batch = net.decoder([codes_s], input_is_stylespace=True, randomize_noise=False)
+		result_batch = self.net.decoder([codes_s], input_is_stylespace=True, randomize_noise=False)
 		return result_batch
