@@ -1,5 +1,7 @@
 # Age-Dependent Face Diversification via Latent Space Analysis (CGI2023)
 
+![teaser](docs/teaser.jpg)
+
 This code is our implementation of the following paper:
 
 Taishi Ito, Yuki Endo, Yoshihiro Kanamori: "Age-Dependent Face Diversification via Latent Space Analysis" The Visual Computer (Proc. of Computer Graphics Internatinal 2023), 2023. [[Project Page](http://cgg.cs.tsukuba.ac.jp/~itohlee/pub/ADFD)][[PDF (11MB)](http://www.cgg.cs.tsukuba.ac.jp/~itohlee/pub/ADFD/pdf/CGI_2023_paper_Ito_f.pdf)]
