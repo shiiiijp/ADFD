@@ -20,11 +20,10 @@ conda env create -f environment/ADFD_env.yml
 
       Repository | Model to download
       ---------- | -----------------
-      [SAM](https://github.com/yuval-alaluf/SAM#pretrained-models)  | **SAM**: Pretrained SAM for age trainsformation.
+      [SAM](https://github.com/yuval-alaluf/SAM#pretrained-models)  | **SAM**: Pretrained SAM for age trainsformation. <br> **VGG Age Classifier**: VGG age classifier from DEX for use in our aging loss. Fine-tuned on the FFHQ-Aging dataset by [yuval-alaluf](https://github.com/yuval-alaluf/SAM)
       [InsightFace_Pytorch](https://github.com/TreB1eN/InsightFace_Pytorch)  | **IR-SE50**: Pretrained IR-SE50 model for use in our ID loss.
-      [VGG Age Classifier](https://github.com/yuval-alaluf/SAM#pretrained-models) | **VGG Age Classifier**: VGG age classifier from DEX for use in our aging loss. Fine-tuned on the FFHQ-Aging dataset by [yuval-alaluf](https://github.com/yuval-alaluf/SAM)
 
-2. Run `scripts/inference_ADFD.py` for Age-Dependent Face Diversification, or `scripts/inference_guided_optimization.py` for Guided Optimization.
+3. Run `scripts/inference_ADFD.py` for Age-Dependent Face Diversification, or `scripts/inference_guided_optimization.py` for Guided Optimization.
 
       Age-Dependent Face Diversification:
       ```
