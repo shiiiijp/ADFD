@@ -26,11 +26,29 @@ Repository | Model to download
 
       Age-Dependent Face Diversification:
       ```
-      python scripts/inference_ADFD.py --exp_dir=/path/to/experiment --checkpoint_path=/path/to/pretrained_model --data_path=/path/to/test_data --test_batch_size=4 --test_workers=4 --aging_lambda=5 --id_lambda=0.1 --l2_lambda=0.01 --lpips_lambda=0.01 --use_weighted_id_loss --couple_outputs --target_age=80
+      python scripts/inference_ADFD.py \
+      --exp_dir=/path/to/experiment \
+      --checkpoint_path=/path/to/pretrained_model \
+      --data_path=/path/to/test_data \
+      --test_batch_size=4 \
+      --test_workers=4 \
+      --aging_lambda=5 \
+      --id_lambda=0.1 \
+      --l2_lambda=0.01 \
+      --lpips_lambda=0.01 \
+      --use_weighted_id_loss \
+      --couple_outputs \
+      --target_age=80
       ```
       Guided Optimization:
       ```
-      python scripts/inference_guided_optimization.py --exp_dir=/path/to/experiment --checkpoint_path=/path/to/pretrained_model --data_path=/path/to/test_data --test_batch_size=4 --test_workers=4 --target_age=5
+      python scripts/inference_guided_optimization.py \
+      --exp_dir=/path/to/experiment \
+      --checkpoint_path=/path/to/pretrained_model \
+      --data_path=/path/to/test_data \
+      --test_batch_size=4 \
+      --test_workers=4 \
+      --target_age=5
       ```
 
 ## Citation
