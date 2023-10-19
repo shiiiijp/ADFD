@@ -59,10 +59,11 @@ Please cite our paper if you find the code useful:
       author    = {Taishi Ito and Yuki Endo and Yoshihiro Kanamori},
       title     = {Age-Dependent Face Diversification via Latent Space Analysis},
       journal   = {The Visual Computer (Proc. of Computer Graphics Internatinal 2023)},
-      volume    = {},
-      number    = {},
-      pages     = {},
-      year      = {2023}
+      volume    = {39},
+      number    = {8},
+      pages     = {3221--3233},
+      year      = {2023},
+      publisher = {Springer}
 }
 ```
 
